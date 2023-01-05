@@ -1,0 +1,134 @@
+type: edu
+custom_name: Decrypted!
+files:
+- name: src/encryptdecrypt/Main.java
+  visible: true
+  text: |
+    package encryptdecrypt;
+
+    public class Main {
+        public static void main(String[] args) {
+            System.out.println("Hello World!");
+        }
+    }
+  learner_created: false
+- name: test/EncryptDecryptTest.java
+  visible: false
+  text: |
+    import org.hyperskill.hstest.stage.StageTest;
+    import org.hyperskill.hstest.testcase.SimpleTestCase;
+
+    import java.util.List;
+
+    public class EncryptDecryptTest extends StageTest {
+
+        @Override
+        public List<SimpleTestCase> generate() {
+            return List.of(
+                new SimpleTestCase(
+                    "enc\n" +
+                        "Welcome to hyperskill!\n" +
+                        "5",
+                    "\\jqhtrj%yt%m~ujwxpnqq&"),
+                new SimpleTestCase(
+                    "enc\n" +
+                        "Hello\n" +
+                        "0",
+                    "Hello"),
+                new SimpleTestCase(
+                    "enc\n" +
+                        "012345678\n" +
+                        "1",
+                    "123456789"),
+                new SimpleTestCase(
+                    "dec\n" +
+                        "\\jqhtrj%yt%m~ujwxpnqq&\n" +
+                        "5",
+                    "Welcome to hyperskill!"),
+                new SimpleTestCase(
+                    "dec\n" +
+                        "Hello\n" +
+                        "0",
+                    "Hello"),
+                new SimpleTestCase(
+                    "dec\n" +
+                        "222233334444\n" +
+                        "1",
+                    "111122223333")
+            );
+        }
+    }
+  learner_created: false
+- name: src/encryptdecrypt/Encoder.java
+  visible: true
+  text: |
+    package encryptdecrypt;
+
+    public class Encoder {
+        private int salt = 0;
+
+        public Encoder() {
+        }
+
+        public Encoder(int salt) {
+            this.salt = salt;
+        }
+
+        private String simpleEncode(String msg) {
+            StringBuilder encode = new StringBuilder();
+            char[] chars = msg.toCharArray();
+            for (char c : chars) {
+                if (c >= 'a' && c <= 'z') {
+                    encode.append((char) ('z' - c + 'a'));
+                } else if (c >= 'A' && c <= 'Z') {
+                    encode.append((char) ('Z' - c + 'A'));
+                } else {
+                    encode.append(c);
+                }
+            }
+            return encode.toString();
+        }
+
+        private String encodeWithSalt(String msg, int salt) {
+    //        int saltMod = salt % 26;
+            StringBuilder encode = new StringBuilder();
+            char[] chars = msg.toCharArray();
+            for (char c : chars) {
+    //            if (Character.isLetter(c)) {
+    //                if (Character.isLetter(c + saltMod)) {
+    //                    encode.append((char) (c + saltMod));
+    //                } else {
+    //                    encode.append((char) (c + saltMod - 26));
+    //                }
+    //            } else {
+    //                encode.append(c);
+    //            }
+                encode.append((char)(c + salt));
+            }
+            return encode.toString();
+        }
+
+        public String encode(String msg) {
+            if (salt == 0) {
+                return simpleEncode(msg);
+            }
+            return encodeWithSalt(msg, salt);
+        }
+
+        public String decode(String msg){
+            StringBuilder decode = new StringBuilder();
+            char[] chars = msg.toCharArray();
+            for (char c: chars){
+                decode.append((char)(c - salt));
+            }
+
+            return decode.toString();
+        }
+    }
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/5389#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sun, 01 Jan 2023 15:34:10 UTC
+record: 3

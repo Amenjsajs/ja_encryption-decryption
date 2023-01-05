@@ -1,0 +1,147 @@
+type: edu
+custom_name: stage2
+files:
+- name: src/encryptdecrypt/Main.java
+  visible: true
+  text: |
+    package encryptdecrypt;
+
+    public class Main {
+        public static void main(String[] args) {
+            System.out.println("Hello World!");
+        }
+    }
+  learner_created: false
+- name: test/EncryptDecryptTest.java
+  visible: false
+  text: |
+    import org.hyperskill.hstest.stage.StageTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testcase.TestCase;
+
+    import java.util.List;
+
+
+    class Attach {
+        String original;
+        int shift;
+        String output;
+
+        public Attach(String original, int shift, String output) {
+            this.original = original;
+            this.shift = shift;
+            this.output = output;
+        }
+    }
+
+    public class EncryptDecryptTest extends StageTest<Attach> {
+
+        @Override
+        public List<TestCase<Attach>> generate() {
+            return List.of(
+                new TestCase<Attach>()
+                    .setInput("welcome to hyperskill\n5")
+                    .setAttach(new Attach(
+                        "welcome to hyperskill",
+                        5,
+                        "bjqhtrj yt mdujwxpnqq")),
+
+                new TestCase<Attach>()
+                    .setInput("treasure\n10")
+                    .setAttach(new Attach(
+                        "treasure",
+                        10,
+                        "dbokcebo"
+                    )),
+
+                new TestCase<Attach>()
+                    .setInput("qdvdqvrxqwxrxwpvrxspvxiqgdiqarairpbiqqid\n12")
+                    .setAttach(new Attach(
+                        "qdvdqvrxqwxrxwpvrxspvxiqgdiqarairpbiqqid",
+                        12,
+                        "cphpchdjcijdjibhdjebhjucspucmdmudbnuccup"
+                    )),
+
+                new TestCase<Attach>()
+                    .setInput("y\n10")
+                    .setAttach(new Attach(
+                        "y",
+                        10,
+                        "i"
+                    ))
+            );
+        }
+
+        @Override
+        public CheckResult check(String reply, Attach attach) {
+            String clue = attach.output;
+            reply = reply.trim();
+            clue = clue.trim();
+            boolean isCorrect = reply.equals(clue);
+            if (isCorrect) {
+                return CheckResult.correct();
+            }
+            if (reply.length() != clue.length()) {
+                return CheckResult.wrong(
+                    "You should output a line with length " +
+                        clue.length() + ". " + "You output a " +
+                        "line with length " + reply.length()
+                );
+            }
+            for (int i = 0; i < clue.length(); i++) {
+                if (reply.charAt(i) != clue.charAt(i)) {
+                    return CheckResult.wrong(
+                        "Your " + (i+1) + "-th character '" + reply.charAt(i) + "'" +
+                            " is incorrect. \n" +
+                        "The right one is '" + clue.charAt(i) + "'. \n" +
+                            "Key is " + attach.shift
+                    );
+                }
+            }
+            return CheckResult.correct();
+        }
+    }
+  learner_created: false
+- name: src/encryptdecrypt/Encoder.java
+  visible: true
+  text: |
+    package encryptdecrypt;
+
+    public class Encoder {
+        private String msg;
+
+        public Encoder() {}
+
+        public String encode(String msg) {
+            StringBuilder encode = new StringBuilder();
+            char[] chars = msg.toCharArray();
+            for (char c : chars) {
+                if (c >= 'a' && c <= 'z') {
+                    encode.append((char) ('z' - c + 'a'));
+                } else if(c >= 'A' && c <= 'Z'){
+                    encode.append((char) ('Z' - c + 'A'));
+                } else {
+                    encode.append(c);
+                }
+            }
+            return encode.toString();
+        }
+    }
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/5388#comment
+status: Failed
+feedback:
+  message: |-
+    Error in test #1
+
+    Program ran out of input. You tried to read more than expected.
+
+    Please find below the output of your program during this failed test.
+    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
+
+    ---
+
+    &gt; welcome to hyperskill
+    &gt; 5
+  time: Sun, 01 Jan 2023 15:31:33 UTC
+record: 2
